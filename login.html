@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+    <title>Connexion - Todo-App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              border: "hsl(214.3 31.8% 91.4%)",
+              input: "hsl(214.3 31.8% 91.4%)",
+              ring: "hsl(221.2 83.2% 53.3%)",
+              background: "hsl(0 0% 100%)",
+              foreground: "hsl(222.2 84% 4.9%)",
+              primary: {
+                DEFAULT: "hsl(221.2 83.2% 53.3%)",
+                foreground: "hsl(210 40% 98%)",
+              },
+              secondary: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(222.2 47.4% 11.2%)",
+              },
+              muted: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(215.4 16.3% 46.9%)",
+              },
+              accent: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(222.2 47.4% 11.2%)",
+              },
+            },
+            borderRadius: {
+              lg: "0.5rem",
+              md: "calc(0.5rem - 2px)",
+              sm: "calc(0.5rem - 4px)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-background min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-background border-b border-border sticky top-0 z-50">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <a href="index.html" class="flex items-center space-x-3 hover:opacity-80 transition-opacity group">
+            <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                <span class="text-primary-foreground font-bold text-xl">T</span>
+            </div>
+            <span class="text-xl font-bold text-foreground bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Todo-App</span>
+        </a>
+          <div class="flex items-center space-x-4">
+            <a
+              href="index.html"
+              class="text-muted-foreground hover:text-foreground font-medium transition-colors"
+              >Accueil</a
+            >
+            <a
+              href="login.html"
+              class="bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:bg-primary/90 transition-colors h-9 inline-flex items-center justify-center"
+              >Connexion</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex items-center justify-center min-h-[calc(100vh-4rem)] py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Logo -->
+            <div class="text-center">
+                <h2 class="text-3xl font-semibold tracking-tight text-foreground">Bienvenue</h2>
+                <p class="mt-2 text-muted-foreground">Connectez-vous à votre compte</p>
+            </div>
+
+        <!-- Login Form -->
+        <div class="bg-background border border-border rounded-lg shadow-sm p-8">
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-foreground mb-2">Email</label>
+                    <input 
+                        id="email" 
+                        name="email" 
+                        type="email" 
+                        required 
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="votre@email.com"
+                    >
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-foreground mb-2">Mot de passe</label>
+                    <input 
+                        id="password" 
+                        name="password" 
+                        type="password" 
+                        required 
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="••••••••"
+                    >
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <input 
+                            id="remember-me" 
+                            name="remember-me" 
+                            type="checkbox" 
+                            class="h-4 w-4 rounded border-input text-primary focus:ring-ring"
+                        >
+                        <label for="remember-me" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground">Se souvenir de moi</label>
+                    </div>
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-primary hover:text-primary/80 transition-colors">Mot de passe oublié ?</a>
+                    </div>
+                </div>
+                <div>
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground h-10 px-4 py-2 w-full font-medium hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-colors"
+                    >
+                        Se connecter
+                    </button>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-muted-foreground">
+                        Pas encore de compte ? 
+                        <a href="#" id="showRegister" class="font-medium text-primary hover:text-primary/80 transition-colors">S'inscrire</a>
+                    </p>
+                </div>
+            </form>
+
+            <!-- Register Form (hidden by default) -->
+            <form id="registerForm" class="space-y-6 hidden">
+                <div>
+                    <label for="reg-name" class="block text-sm font-medium text-foreground mb-2">Nom complet</label>
+                    <input 
+                        id="reg-name" 
+                        name="name" 
+                        type="text" 
+                        required 
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Jean Dupont"
+                    >
+                </div>
+                <div>
+                    <label for="reg-email" class="block text-sm font-medium text-foreground mb-2">Email</label>
+                    <input 
+                        id="reg-email" 
+                        name="email" 
+                        type="email" 
+                        required 
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="votre@email.com"
+                    >
+                </div>
+                <div>
+                    <label for="reg-password" class="block text-sm font-medium text-foreground mb-2">Mot de passe</label>
+                    <input 
+                        id="reg-password" 
+                        name="password" 
+                        type="password" 
+                        required 
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="••••••••"
+                    >
+                </div>
+                <div>
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground h-10 px-4 py-2 w-full font-medium hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-colors"
+                    >
+                        S'inscrire
+                    </button>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-muted-foreground">
+                        Déjà un compte ? 
+                        <a href="#" id="showLogin" class="font-medium text-primary hover:text-primary/80 transition-colors">Se connecter</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>
+

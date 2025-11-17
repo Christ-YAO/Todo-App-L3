@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+    <title>Dashboard - Todo-App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              border: "hsl(214.3 31.8% 91.4%)",
+              input: "hsl(214.3 31.8% 91.4%)",
+              ring: "hsl(221.2 83.2% 53.3%)",
+              background: "hsl(0 0% 100%)",
+              foreground: "hsl(222.2 84% 4.9%)",
+              primary: {
+                DEFAULT: "hsl(221.2 83.2% 53.3%)",
+                foreground: "hsl(210 40% 98%)",
+              },
+              secondary: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(222.2 47.4% 11.2%)",
+              },
+              muted: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(215.4 16.3% 46.9%)",
+              },
+              accent: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(222.2 47.4% 11.2%)",
+              },
+            },
+            borderRadius: {
+              lg: "0.5rem",
+              md: "calc(0.5rem - 2px)",
+              sm: "calc(0.5rem - 4px)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gradient-to-br from-background via-primary/5 to-background min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-3 hover:opacity-80 transition-opacity group">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                        <span class="text-primary-foreground font-bold text-xl">T</span>
+                    </div>
+                    <span class="text-xl font-bold text-foreground bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Todo-App</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3 bg-muted/50 px-4 py-2 rounded-full">
+                        <div class="w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-primary-foreground font-semibold text-sm shadow-md">
+                            <span id="userInitial">U</span>
+                        </div>
+                        <div class="hidden sm:block">
+                            <span id="userName" class="text-foreground font-semibold text-sm block">Utilisateur</span>
+                            <span class="text-muted-foreground text-xs">En ligne</span>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="w-10 h-10 rounded-full bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all" title="Déconnexion">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Welcome Section -->
+        <div class="mb-12">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-foreground mb-3">
+                        Bienvenue<span id="userGreeting" class="text-primary"> !</span>
+                    </h1>
+                    <p class="text-lg text-muted-foreground">Organisez vos projets et boostez votre productivité</p>
+                </div>
+                <button onclick="showCreateBoardModal()" class="group inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary to-primary/90 text-primary-foreground h-12 px-6 font-semibold hover:shadow-xl hover:scale-105 transition-all duration-200 space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Nouveau tableau</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div id="statsSection" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <!-- Stats will be dynamically added -->
+        </div>
+
+        <!-- Boards Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-foreground mb-1">Mes tableaux</h2>
+                    <p class="text-muted-foreground text-sm">Gérez tous vos projets</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="gridView" onclick="setView('grid')" class="p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors" title="Vue grille">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                        </svg>
+                    </button>
+                    <button id="listView" onclick="setView('list')" class="p-2 rounded-lg bg-muted hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" title="Vue liste">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Boards Grid -->
+            <div id="boardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Boards will be dynamically added here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="text-center py-20 hidden">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl mb-6">
+                    <svg class="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-foreground mb-3">Aucun tableau pour le moment</h3>
+                <p class="text-muted-foreground mb-8 max-w-md mx-auto">Créez votre premier tableau pour commencer à organiser votre travail et atteindre vos objectifs</p>
+                <button onclick="showCreateBoardModal()" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary to-primary/90 text-primary-foreground h-12 px-8 font-semibold hover:shadow-xl hover:scale-105 transition-all duration-200 space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Créer mon premier tableau</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Board Modal -->
+    <div id="createBoardModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-background border border-border rounded-2xl shadow-2xl p-8 max-w-lg w-full mx-4 transform transition-all">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold tracking-tight text-foreground">Nouveau tableau</h2>
+                <button onclick="hideCreateBoardModal()" class="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="createBoardForm" class="space-y-6">
+                <div>
+                    <label for="boardName" class="block text-sm font-semibold text-foreground mb-2">Nom du tableau</label>
+                    <input 
+                        id="boardName" 
+                        type="text" 
+                        required 
+                        class="flex h-12 w-full rounded-xl border-2 border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors"
+                        placeholder="Ex: Projet Marketing"
+                    >
+                </div>
+                <div>
+                    <label for="boardColor" class="block text-sm font-semibold text-foreground mb-3">Couleur du tableau</label>
+                    <div class="grid grid-cols-6 gap-3">
+                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-blue-500 hover:scale-110 hover:shadow-lg transition-all ring-2 ring-blue-500 ring-offset-2" data-color="blue"></button>
+                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-purple-500 hover:scale-110 hover:shadow-lg transition-all" data-color="purple"></button>
+                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-green-500 hover:scale-110 hover:shadow-lg transition-all" data-color="green"></button>
+                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-yellow-500 hover:scale-110 hover:shadow-lg transition-all" data-color="yellow"></button>
+                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-red-500 hover:scale-110 hover:shadow-lg transition-all" data-color="red"></button>
+                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-pink-500 hover:scale-110 hover:shadow-lg transition-all" data-color="pink"></button>
+                    </div>
+                </div>
+                <div class="flex space-x-4 pt-4">
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary to-primary/90 text-primary-foreground h-12 px-6 flex-1 font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
+                    >
+                        Créer le tableau
+                    </button>
+                    <button 
+                        type="button" 
+                        onclick="hideCreateBoardModal()" 
+                        class="inline-flex items-center justify-center rounded-xl border-2 border-input bg-background h-12 px-6 flex-1 font-semibold hover:bg-accent hover:text-accent-foreground transition-colors"
+                    >
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Board Modal -->
+    <div id="editBoardModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-background border border-border rounded-2xl shadow-2xl p-8 max-w-lg w-full mx-4 transform transition-all">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold tracking-tight text-foreground">Modifier le tableau</h2>
+                <button onclick="hideEditBoardModal()" class="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="editBoardForm" class="space-y-6">
+                <div>
+                    <label for="editBoardName" class="block text-sm font-semibold text-foreground mb-2">Nom du tableau</label>
+                    <input 
+                        id="editBoardName" 
+                        type="text" 
+                        required 
+                        class="flex h-12 w-full rounded-xl border-2 border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors"
+                        placeholder="Ex: Projet Marketing"
+                    >
+                </div>
+                <div>
+                    <label for="editBoardColor" class="block text-sm font-semibold text-foreground mb-3">Couleur du tableau</label>
+                    <div class="grid grid-cols-6 gap-3">
+                        <button type="button" class="edit-color-option w-full aspect-square rounded-xl bg-blue-500 hover:scale-110 hover:shadow-lg transition-all" data-color="blue"></button>
+                        <button type="button" class="edit-color-option w-full aspect-square rounded-xl bg-purple-500 hover:scale-110 hover:shadow-lg transition-all" data-color="purple"></button>
+                        <button type="button" class="edit-color-option w-full aspect-square rounded-xl bg-green-500 hover:scale-110 hover:shadow-lg transition-all" data-color="green"></button>
+                        <button type="button" class="edit-color-option w-full aspect-square rounded-xl bg-yellow-500 hover:scale-110 hover:shadow-lg transition-all" data-color="yellow"></button>
+                        <button type="button" class="edit-color-option w-full aspect-square rounded-xl bg-red-500 hover:scale-110 hover:shadow-lg transition-all" data-color="red"></button>
+                        <button type="button" class="edit-color-option w-full aspect-square rounded-xl bg-pink-500 hover:scale-110 hover:shadow-lg transition-all" data-color="pink"></button>
+                    </div>
+                </div>
+                <div class="flex space-x-4 pt-4">
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary to-primary/90 text-primary-foreground h-12 px-6 flex-1 font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
+                    >
+                        Enregistrer
+                    </button>
+                    <button 
+                        type="button" 
+                        onclick="hideEditBoardModal()" 
+                        class="inline-flex items-center justify-center rounded-xl border-2 border-input bg-background h-12 px-6 flex-1 font-semibold hover:bg-accent hover:text-accent-foreground transition-colors"
+                    >
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+    <title>Todo-App - Accueil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              border: "hsl(214.3 31.8% 91.4%)",
+              input: "hsl(214.3 31.8% 91.4%)",
+              ring: "hsl(221.2 83.2% 53.3%)",
+              background: "hsl(0 0% 100%)",
+              foreground: "hsl(222.2 84% 4.9%)",
+              primary: {
+                DEFAULT: "hsl(221.2 83.2% 53.3%)",
+                foreground: "hsl(210 40% 98%)",
+              },
+              secondary: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(222.2 47.4% 11.2%)",
+              },
+              muted: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(215.4 16.3% 46.9%)",
+              },
+              accent: {
+                DEFAULT: "hsl(210 40% 96.1%)",
+                foreground: "hsl(222.2 47.4% 11.2%)",
+              },
+            },
+            borderRadius: {
+              lg: "0.5rem",
+              md: "calc(0.5rem - 2px)",
+              sm: "calc(0.5rem - 4px)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="bg-background min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-background border-b border-border sticky top-0 z-50">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <a
+            href="index.html"
+            class="flex items-center space-x-3 hover:opacity-80 transition-opacity group"
+          >
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow"
+            >
+              <span class="text-primary-foreground font-bold text-xl">T</span>
+            </div>
+            <span
+              class="text-xl font-bold text-foreground bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+              >Todo-App</span
+            >
+          </a>
+          <div class="flex items-center space-x-4">
+            <a
+              href="login.html"
+              class="text-muted-foreground hover:text-foreground font-medium transition-colors"
+              >Connexion</a
+            >
+            <a
+              href="login.html"
+              class="bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:bg-primary/90 transition-colors h-9 inline-flex items-center justify-center"
+              >S'inscrire</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div class="text-center">
+        <div
+          class="inline-flex items-center justify-center w-20 h-20 bg-primary/10 rounded-2xl mb-8"
+        >
+          <div
+            class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center"
+          >
+            <span class="text-primary-foreground font-bold text-2xl">T</span>
+          </div>
+        </div>
+        <h1
+          class="text-6xl md:text-7xl font-bold tracking-tight text-foreground mb-6"
+        >
+          Organisez votre
+          <span class="text-primary block mt-2">travail efficacement</span>
+        </h1>
+        <p
+          class="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed"
+        >
+          La solution moderne pour gérer vos projets et tâches.
+          <span class="text-foreground font-medium"
+            >Simple, puissant, intuitif.</span
+          >
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          <a
+            href="login.html"
+            class="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-all h-12 inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          >
+            Commencer gratuitement
+            <svg
+              class="w-5 h-5 ml-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              ></path>
+            </svg>
+          </a>
+          <a
+            href="#features"
+            class="bg-background text-foreground px-8 py-4 rounded-lg font-semibold border-2 border-border hover:border-primary hover:bg-accent transition-all h-12 inline-flex items-center justify-center"
+          >
+            Découvrir les fonctionnalités
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Image/Demo -->
+      <div class="mt-16 relative">
+        <div
+          class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-5 border border-border/50 backdrop-blur-sm overflow-x-auto"
+        >
+          <div class="flex space-x-4 min-w-max">
+            <!-- To Do Column -->
+            <div
+              class="bg-muted/30 border border-border rounded-lg p-4 min-w-[260px] max-w-[260px] flex flex-col"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold text-foreground">To Do</h3>
+                <span
+                  class="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded-md border border-border"
+                  >2</span
+                >
+              </div>
+              <div class="space-y-3 flex-1">
+                <div
+                  class="bg-background border border-border rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
+                >
+                  <div class="mb-3">
+                    <span
+                      class="inline-block px-2.5 py-1 rounded text-xs font-medium text-white bg-red-500"
+                      >High</span
+                    >
+                  </div>
+                  <h4 class="font-semibold text-foreground mb-2 text-sm">
+                    Révision du design
+                  </h4>
+                  <p
+                    class="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed"
+                  >
+                    Finaliser les maquettes et valider avec l'équipe
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <div
+                      class="flex items-center space-x-1 text-xs text-muted-foreground"
+                    >
+                      <svg
+                        class="w-3.5 h-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                      <span>Aujourd'hui</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                      <div class="flex -space-x-2">
+                        <div
+                          class="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold border-2 border-background"
+                        >
+                          J
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bg-background border border-border rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
+                >
+                  <div class="mb-3">
+                    <span
+                      class="inline-block px-2.5 py-1 rounded text-xs font-medium text-white bg-green-500"
+                      >Low</span
+                    >
+                  </div>
+                  <h4 class="font-semibold text-foreground mb-2 text-sm">
+                    Documentation API
+                  </h4>
+                  <p
+                    class="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed"
+                  >
+                    Rédiger la documentation complète des endpoints
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <div></div>
+                    <div class="flex items-center space-x-3">
+                      <div class="flex -space-x-2">
+                        <div
+                          class="w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center text-xs font-semibold border-2 border-background"
+                        >
+                          S
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- In Progress Column -->
+            <div
+              class="bg-muted/30 border border-border rounded-lg p-4 min-w-[260px] max-w-[260px] flex flex-col"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold text-foreground">In Progress</h3>
+                <span
+                  class="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded-md border border-border"
+                  >1</span
+                >
+              </div>
+              <div class="space-y-3 flex-1">
+                <div
+                  class="bg-background border-2 border-primary rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
+                >
+                  <div class="mb-3">
+                    <span
+                      class="inline-block px-2.5 py-1 rounded text-xs font-medium text-white bg-yellow-500"
+                      >Medium</span
+                    >
+                  </div>
+                  <h4 class="font-semibold text-foreground mb-2 text-sm">
+                    Implémentation drag & drop
+                  </h4>
+                  <p
+                    class="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed"
+                  >
+                    Ajouter la fonctionnalité de glisser-déposer entre les
+                    colonnes
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <div
+                      class="flex items-center space-x-1 text-xs text-muted-foreground"
+                    >
+                      <svg
+                        class="w-3.5 h-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                      <span>2 jours</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                      <div class="flex -space-x-2">
+                        <div
+                          class="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-semibold border-2 border-background"
+                        >
+                          L
+                        </div>
+                        <div
+                          class="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-semibold border-2 border-background"
+                        >
+                          K
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Done Column -->
+            <div
+              class="bg-muted/30 border border-border rounded-lg p-4 min-w-[260px] max-w-[260px] flex flex-col"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold text-foreground">Done</h3>
+                <span
+                  class="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded-md border border-border"
+                  >1</span
+                >
+              </div>
+              <div class="space-y-3 flex-1">
+                <div
+                  class="bg-background border border-border rounded-lg p-4 cursor-pointer hover:shadow-md transition-all opacity-75"
+                >
+                  <div class="mb-3">
+                    <span
+                      class="inline-block px-2.5 py-1 rounded text-xs font-medium text-white bg-green-500"
+                      >Low</span
+                    >
+                  </div>
+                  <h4
+                    class="font-semibold text-foreground mb-2 text-sm line-through"
+                  >
+                    Configuration initiale
+                  </h4>
+                  <p
+                    class="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed line-through"
+                  >
+                    Mise en place de l'environnement de développement
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <div></div>
+                    <div class="flex items-center space-x-3">
+                      <div class="flex -space-x-2">
+                        <div
+                          class="w-6 h-6 rounded-full bg-gray-500 text-white flex items-center justify-center text-xs font-semibold border-2 border-background"
+                        >
+                          T
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div class="text-center mb-16">
+        <div
+          class="inline-flex items-center justify-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
+        >
+          <span class="text-sm font-semibold text-primary"
+            >Pourquoi nous choisir</span
+          >
+        </div>
+        <h2
+          class="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6"
+        >
+          Une expérience de gestion
+          <span class="text-primary">exceptionnelle</span>
+        </h2>
+        <p
+          class="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+        >
+          Découvrez les fonctionnalités qui font de Todo-App la solution idéale
+          pour transformer votre façon de travailler
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div
+          class="group relative bg-background border-2 border-border rounded-2xl p-8 hover:border-primary/50 hover:shadow-xl transition-all duration-300 overflow-hidden"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          ></div>
+          <div class="relative">
+            <div
+              class="w-14 h-14 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-primary/20"
+            >
+              <svg
+                class="w-7 h-7 text-primary-foreground"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                ></path>
+              </svg>
+            </div>
+            <h3
+              class="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors"
+            >
+              Organisation intuitive
+            </h3>
+            <p class="text-muted-foreground leading-relaxed text-[15px]">
+              Interface simple et puissante pour gérer tous vos projets en un
+              coup d'œil. Visualisez votre travail avec des tableaux Kanban
+              clairs et efficaces.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="group relative bg-background border-2 border-border rounded-2xl p-8 hover:border-primary/50 hover:shadow-xl transition-all duration-300 overflow-hidden"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          ></div>
+          <div class="relative">
+            <div
+              class="w-14 h-14 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-primary/20"
+            >
+              <svg
+                class="w-7 h-7 text-primary-foreground"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                ></path>
+              </svg>
+            </div>
+            <h3
+              class="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors"
+            >
+              Collaboration en temps réel
+            </h3>
+            <p class="text-muted-foreground leading-relaxed text-[15px]">
+              Travaillez ensemble avec votre équipe, où que vous soyez. Partagez
+              des tableaux, assignez des tâches et suivez la progression en
+              direct.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="group relative bg-background border-2 border-border rounded-2xl p-8 hover:border-primary/50 hover:shadow-xl transition-all duration-300 overflow-hidden md:col-span-2 lg:col-span-1"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          ></div>
+          <div class="relative">
+            <div
+              class="w-14 h-14 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-primary/20"
+            >
+              <svg
+                class="w-7 h-7 text-primary-foreground"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                ></path>
+              </svg>
+            </div>
+            <h3
+              class="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors"
+            >
+              Productivité maximale
+            </h3>
+            <p class="text-muted-foreground leading-relaxed text-[15px]">
+              Gagnez du temps avec des outils puissants. Priorités, dates
+              d'échéance, et suivi complet pour une gestion optimale de vos
+              projets.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+        <div
+          class="text-center p-6 rounded-xl bg-muted/50 border border-border"
+        >
+          <div class="text-3xl font-bold text-foreground mb-2">100%</div>
+          <div class="text-sm text-muted-foreground font-medium">Gratuit</div>
+        </div>
+        <div
+          class="text-center p-6 rounded-xl bg-muted/50 border border-border"
+        >
+          <div class="text-3xl font-bold text-foreground mb-2">∞</div>
+          <div class="text-sm text-muted-foreground font-medium">
+            Projets illimités
+          </div>
+        </div>
+        <div
+          class="text-center p-6 rounded-xl bg-muted/50 border border-border"
+        >
+          <div class="text-3xl font-bold text-foreground mb-2">24/7</div>
+          <div class="text-sm text-muted-foreground font-medium">
+            Disponible
+          </div>
+        </div>
+        <div
+          class="text-center p-6 rounded-xl bg-muted/50 border border-border"
+        >
+          <div class="text-3xl font-bold text-foreground mb-2">0</div>
+          <div class="text-sm text-muted-foreground font-medium">
+            Configuration
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-muted border-t border-border py-12 mt-20">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <a
+              href="index.html"
+              class="flex items-center space-x-2 mb-4 hover:opacity-80 transition-opacity"
+            >
+              <div
+                class="w-8 h-8 bg-primary rounded-md flex items-center justify-center"
+              >
+                <span class="text-primary-foreground font-semibold text-lg"
+                  >T</span
+                >
+              </div>
+              <span class="text-lg font-semibold text-foreground"
+                >Todo-App</span
+              >
+            </a>
+            <p class="text-muted-foreground text-sm">
+              Organisez votre travail, libérez votre esprit.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4 text-foreground">Produit</h4>
+            <ul class="space-y-2 text-muted-foreground text-sm">
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >Fonctionnalités</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >Tarifs</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >Templates</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4 text-foreground">Entreprise</h4>
+            <ul class="space-y-2 text-muted-foreground text-sm">
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >À propos</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >Carrières</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4 text-foreground">Ressources</h4>
+            <ul class="space-y-2 text-muted-foreground text-sm">
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >Blog</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >Support</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-foreground transition-colors"
+                  >Communauté</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-border mt-8 pt-8 text-center text-muted-foreground text-sm"
+        >
+          <p>&copy; 2024 Todo-App. Tous droits réservés.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
