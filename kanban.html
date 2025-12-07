@@ -65,7 +65,26 @@
     >
       <div
         class="relative left-[calc(10%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#22c55e] to-[#059669] opacity-30 sm:left-[calc(10%+36rem)] sm:w-[72.1875rem]"
-        style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+        style="
+          clip-path: polygon(
+            74.1% 44.1%,
+            100% 61.6%,
+            97.5% 26.9%,
+            85.5% 0.1%,
+            80.7% 2%,
+            72.5% 32.5%,
+            60.2% 62.4%,
+            52.4% 68.1%,
+            47.5% 58.3%,
+            45.2% 34.5%,
+            27.5% 76.7%,
+            0.1% 64.9%,
+            17.9% 100%,
+            27.6% 76.8%,
+            76.1% 97.7%,
+            74.1% 44.1%
+          );
+        "
       ></div>
     </div>
     <div
@@ -74,7 +93,26 @@
     >
       <div
         class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#de1414] to-[#2f0df2] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
-        style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+        style="
+          clip-path: polygon(
+            74.1% 44.1%,
+            100% 61.6%,
+            97.5% 26.9%,
+            85.5% 0.1%,
+            80.7% 2%,
+            72.5% 32.5%,
+            60.2% 62.4%,
+            52.4% 68.1%,
+            47.5% 58.3%,
+            45.2% 34.5%,
+            27.5% 76.7%,
+            0.1% 64.9%,
+            17.9% 100%,
+            27.6% 76.8%,
+            76.1% 97.7%,
+            74.1% 44.1%
+          );
+        "
       ></div>
     </div>
     <!-- Navigation -->
@@ -83,22 +121,24 @@
     >
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
-          <a
-            href="index.html"
-            class="flex items-center space-x-4 group"
-          >
+          <a href="index.html" class="flex items-center space-x-4 group">
             <div class="relative">
               <div
                 class="absolute inset-0 bg-gradient-to-br from-[#22c55e] via-[#059669] to-[#de1414] rounded-2xl blur-md opacity-60 group-hover:opacity-90 group-hover:blur-lg transition-all duration-300"
               ></div>
               <div
                 class="relative w-16 h-16 bg-gradient-to-br from-[#22c55e] via-[#059669] to-[#2f0df2] rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] group-hover:scale-110 transition-all duration-300 transform-gpu"
-                style="box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);"
+                style="
+                  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                "
               >
-                <div class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl"></div>
+                <div
+                  class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl"
+                ></div>
                 <span
                   class="font-logo text-white text-3xl font-black tracking-tight relative z-10"
-                  style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);"
+                  style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)"
                   >TM</span
                 >
               </div>
@@ -108,7 +148,9 @@
               >TaskManager</span
             >
           </a>
-          <div class="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2 space-x-8">
+          <div
+            class="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2 space-x-8"
+          >
             <a
               href="index.html"
               class="text-black/70 hover:text-black font-medium text-sm transition-colors relative group"
@@ -189,7 +231,7 @@
     </nav>
 
     <!-- Kanban Header -->
-    <header class="bg-background border-b border-border sticky top-16 z-30">
+    <header class="bg-background border-b border-border sticky top-20 z-30 mt-20">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
@@ -511,138 +553,14 @@
       </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-black border-t border-black pt-20 pb-8 mt-24">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          <div class="md:col-span-1">
-            <a href="index.html" class="flex items-center space-x-3 mb-6 group">
-              <div class="relative">
-                <div
-                  class="absolute inset-0 bg-gradient-to-br from-[#22c55e] via-[#059669] to-[#de1414] rounded-xl blur-sm opacity-50 group-hover:opacity-75 transition-opacity"
-                ></div>
-                <div
-                  class="relative w-12 h-12 bg-gradient-to-br from-[#22c55e] via-[#059669] to-[#2f0df2] rounded-xl flex items-center justify-center"
-                >
-                  <span
-                    class="font-logo text-white text-lg font-bold tracking-wider"
-                    >TM</span
-                  >
-                </div>
-              </div>
-              <span class="text-lg font-black text-white tracking-tighter font-logo"
-                >TaskManager</span
-              >
-            </a>
-            <p class="text-white/80 text-sm font-light leading-relaxed">
-              La plateforme de gestion de projets nouvelle génération.
-            </p>
-          </div>
-          <div>
-            <h4
-              class="font-bold mb-6 text-white text-sm uppercase tracking-wider"
-            >
-              Produit
-            </h4>
-            <ul class="space-y-3 text-white/70 text-sm">
-              <li>
-                <a
-                  href="#features"
-                  class="hover:text-white transition-colors font-light"
-                  >Fonctionnalités</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-white transition-colors font-light"
-                  >Tarifs</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-white transition-colors font-light"
-                  >Templates</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4
-              class="font-bold mb-6 text-white text-sm uppercase tracking-wider"
-            >
-              Entreprise
-            </h4>
-            <ul class="space-y-3 text-white/70 text-sm">
-              <li>
-                <a
-                  href="about.html"
-                  class="hover:text-white transition-colors font-light"
-                  >À propos</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-white transition-colors font-light"
-                  >Carrières</a
-                >
-              </li>
-              <li>
-                <a
-                  href="contact.html"
-                  class="hover:text-white transition-colors font-light"
-                  >Contact</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4
-              class="font-bold mb-6 text-white text-sm uppercase tracking-wider"
-            >
-              Ressources
-            </h4>
-            <ul class="space-y-3 text-white/70 text-sm">
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-white transition-colors font-light"
-                  >Blog</a
-                >
-              </li>
-              <li>
-                <a
-                  href="faq.html"
-                  class="hover:text-white transition-colors font-light"
-                  >FAQ</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-white transition-colors font-light"
-                  >Support</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="hover:text-white transition-colors font-light"
-                  >Communauté</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div
-          class="border-t border-white/20 py-8 text-center text-white/60 text-xs font-light"
-        >
-          <p>&copy; 2024 TaskManager. Tous droits réservés.</p>
-        </div>
+    <!-- Copyright Footer -->
+    <div class="max-w-xs mx-auto py-8">
+      <div class="relative pt-8 text-center border-t border-black/10">
+        <p class="relative z-10 text-black/70 text-xs font-light">
+          &copy; 2024 TaskManager. Tous droits réservés.
+        </p>
       </div>
-    </footer>
+    </div>
 
     <script src="kanban.js"></script>
   </body>
