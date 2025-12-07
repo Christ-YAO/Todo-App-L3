@@ -324,109 +324,158 @@
     <!-- Add Card Modal -->
     <div
       id="addCardModal"
-      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4"
+      class="fixed inset-0 bg-black/60 backdrop-blur-md hidden items-center justify-center z-50 p-4"
     >
       <div
-        class="bg-background border border-border rounded-lg shadow-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
+        class="relative bg-white/90 backdrop-blur-2xl border border-white/60 rounded-3xl shadow-2xl p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto transform transition-all before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/30 before:to-transparent before:pointer-events-none"
+        style="box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);"
       >
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-semibold tracking-tight text-foreground">
-            Nouvelle carte
-          </h2>
-          <button
-            onclick="hideAddCardModal()"
-            class="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
-          </button>
-        </div>
-        <form id="addCardForm" class="space-y-5">
-          <div>
-            <label
-              for="cardTitle"
-              class="block text-sm font-semibold text-foreground mb-2"
-              >Titre *</label
-            >
-            <input
-              id="cardTitle"
-              type="text"
-              required
-              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder="Ex: Feed Research"
-            />
-          </div>
-          <div>
-            <label
-              for="cardDescription"
-              class="block text-sm font-semibold text-foreground mb-2"
-              >Description</label
-            >
-            <textarea
-              id="cardDescription"
-              rows="3"
-              class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-              placeholder="Ajoutez une description pour cette tâche..."
-            ></textarea>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label
-                for="cardPriority"
-                class="block text-sm font-semibold text-foreground mb-2"
-                >Priorité</label
-              >
-              <select
-                id="cardPriority"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <option value="low" selected>Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
+        <div class="relative z-10">
+          <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#22c55e] via-[#059669] to-[#2f0df2] flex items-center justify-center shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+              </div>
+              <h2 class="text-3xl font-black tracking-tight text-black">
+                Nouvelle carte
+              </h2>
             </div>
-            <div>
-              <label
-                for="cardDueDate"
-                class="block text-sm font-semibold text-foreground mb-2"
-                >Date d'échéance</label
-              >
-              <input
-                id="cardDueDate"
-                type="date"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              />
-            </div>
-          </div>
-          <div
-            class="flex items-center justify-end space-x-3 pt-4 border-t border-border"
-          >
             <button
-              type="button"
               onclick="hideAddCardModal()"
-              class="inline-flex items-center justify-center rounded-md border border-input bg-background h-10 px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+              class="w-10 h-10 rounded-xl bg-white/30 backdrop-blur-sm border border-white/40 hover:bg-white/40 hover:border-white/60 flex items-center justify-center text-black/70 hover:text-black transition-all duration-300"
             >
-              Annuler
-            </button>
-            <button
-              type="submit"
-              class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground h-10 px-6 text-sm font-semibold hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-colors"
-            >
-              Créer la carte
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
             </button>
           </div>
-        </form>
+          <form id="addCardForm" class="space-y-6">
+            <div class="space-y-2">
+              <label
+                for="cardTitle"
+                class="block text-sm font-semibold text-black/90 mb-2 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Titre *
+              </label>
+              <div class="relative">
+                <input
+                  id="cardTitle"
+                  type="text"
+                  required
+                  class="flex h-12 w-full rounded-xl border-2 border-black/20 bg-white/30 backdrop-blur-xl px-4 pl-12 py-3 text-sm font-semibold text-black placeholder:text-black/50 focus-visible:outline-none focus-visible:border-[#22c55e] focus-visible:ring-2 focus-visible:ring-[#22c55e]/30 focus-visible:bg-white/40 focus-visible:backdrop-blur-xl transition-all duration-300 shadow-sm hover:border-black/30 hover:bg-white/35"
+                  placeholder="Ex: Feed Research"
+                />
+                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label
+                for="cardDescription"
+                class="block text-sm font-semibold text-black/90 mb-2 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                </svg>
+                Description
+              </label>
+              <div class="relative">
+                <textarea
+                  id="cardDescription"
+                  rows="3"
+                  class="flex min-h-[100px] w-full rounded-xl border-2 border-black/20 bg-white/30 backdrop-blur-xl px-4 pt-3 pb-3 text-sm font-semibold text-black placeholder:text-black/50 focus-visible:outline-none focus-visible:border-[#22c55e] focus-visible:ring-2 focus-visible:ring-[#22c55e]/30 focus-visible:bg-white/40 focus-visible:backdrop-blur-xl transition-all duration-300 shadow-sm hover:border-black/30 hover:bg-white/35 resize-none"
+                  placeholder="Ajoutez une description pour cette tâche..."
+                ></textarea>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label
+                  for="cardPriority"
+                  class="block text-sm font-semibold text-black/90 mb-2 flex items-center gap-2"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  </svg>
+                  Priorité
+                </label>
+                <div class="relative">
+                  <select
+                    id="cardPriority"
+                    class="flex h-12 w-full rounded-xl border-2 border-black/20 bg-white/60 backdrop-blur-xl px-4 pl-12 py-3 text-sm font-semibold text-black focus-visible:outline-none focus-visible:border-[#22c55e] focus-visible:ring-2 focus-visible:ring-[#22c55e]/30 focus-visible:bg-white/70 focus-visible:backdrop-blur-xl transition-all duration-300 shadow-sm hover:border-black/30 hover:bg-white/65 appearance-none cursor-pointer"
+                  >
+                    <option value="low" selected>Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                  <svg class="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black/40 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <label
+                  for="cardDueDate"
+                  class="block text-sm font-semibold text-black/90 mb-2 flex items-center gap-2"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  Date d'échéance
+                </label>
+                <div class="relative">
+                  <input
+                    id="cardDueDate"
+                    type="date"
+                    class="flex h-12 w-full rounded-xl border-2 border-black/20 bg-white/60 backdrop-blur-xl px-4 pl-12 py-3 text-sm font-semibold text-black focus-visible:outline-none focus-visible:border-[#22c55e] focus-visible:ring-2 focus-visible:ring-[#22c55e]/30 focus-visible:bg-white/70 focus-visible:backdrop-blur-xl transition-all duration-300 shadow-sm hover:border-black/30 hover:bg-white/65"
+                  />
+                  <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black/40 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="relative pt-4">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-white/30"></div>
+              </div>
+              <div class="relative flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onclick="hideAddCardModal()"
+                  class="inline-flex items-center justify-center rounded-xl border-2 border-black/20 bg-white/60 backdrop-blur-xl h-12 px-6 text-sm font-semibold text-black/80 hover:bg-white/70 hover:border-black/30 hover:text-black transition-all duration-300"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  class="group relative inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#22c55e] to-[#059669] text-white h-12 px-6 text-sm font-semibold hover:from-[#059669] hover:to-[#22c55e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] transform"
+                >
+                  <span class="relative z-10">Créer la carte</span>
+                  <svg class="absolute right-6 w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
 
