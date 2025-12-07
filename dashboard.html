@@ -195,54 +195,117 @@
     </main>
 
     <!-- Create Board Modal -->
-    <div id="createBoardModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-background border border-border rounded-2xl shadow-2xl p-8 max-w-lg w-full mx-4 transform transition-all">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-3xl font-bold tracking-tight text-foreground">Nouveau tableau</h2>
-                <button onclick="hideCreateBoardModal()" class="w-10 h-10 rounded-full bg-muted hover:bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <form id="createBoardForm" class="space-y-6">
-                <div>
-                    <label for="boardName" class="block text-sm font-semibold text-foreground mb-2">Nom du tableau</label>
-                    <input 
-                        id="boardName" 
-                        type="text" 
-                        required 
-                        class="flex h-12 w-full rounded-xl border-2 border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors"
-                        placeholder="Ex: Projet Marketing"
-                    >
-                </div>
-                <div>
-                    <label for="boardColor" class="block text-sm font-semibold text-foreground mb-3">Couleur du tableau</label>
-                    <div class="grid grid-cols-6 gap-3">
-                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-blue-500 hover:scale-110 hover:shadow-lg transition-all ring-2 ring-blue-500 ring-offset-2" data-color="blue"></button>
-                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-purple-500 hover:scale-110 hover:shadow-lg transition-all" data-color="purple"></button>
-                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-green-500 hover:scale-110 hover:shadow-lg transition-all" data-color="green"></button>
-                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-yellow-500 hover:scale-110 hover:shadow-lg transition-all" data-color="yellow"></button>
-                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-red-500 hover:scale-110 hover:shadow-lg transition-all" data-color="red"></button>
-                        <button type="button" class="color-option w-full aspect-square rounded-xl bg-pink-500 hover:scale-110 hover:shadow-lg transition-all" data-color="pink"></button>
+    <div id="createBoardModal" class="fixed inset-0 bg-black/60 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+        <div class="relative bg-white/70 backdrop-blur-2xl border border-white/50 rounded-3xl shadow-2xl p-8 max-w-lg w-full mx-4 transform transition-all before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none" style="box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
+            <div class="relative z-10">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#22c55e] via-[#059669] to-[#2f0df2] flex items-center justify-center shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-black tracking-tight text-black">Nouveau tableau</h2>
                     </div>
-                </div>
-                <div class="flex space-x-4 pt-4">
-                    <button 
-                        type="submit" 
-                        class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary to-primary/90 text-primary-foreground h-12 px-6 flex-1 font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
-                    >
-                        Créer le tableau
-                    </button>
-                    <button 
-                        type="button" 
-                        onclick="hideCreateBoardModal()" 
-                        class="inline-flex items-center justify-center rounded-xl border-2 border-input bg-background h-12 px-6 flex-1 font-semibold hover:bg-accent hover:text-accent-foreground transition-colors"
-                    >
-                        Annuler
+                    <button onclick="hideCreateBoardModal()" class="w-10 h-10 rounded-xl bg-white/30 backdrop-blur-sm border border-white/40 hover:bg-white/40 hover:border-white/60 flex items-center justify-center text-black/70 hover:text-black transition-all duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
                     </button>
                 </div>
-            </form>
+                <form id="createBoardForm" class="space-y-6">
+                    <div class="space-y-2">
+                        <label for="boardName" class="block text-sm font-semibold text-black/90 mb-2 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                            Nom du tableau
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="boardName" 
+                                type="text" 
+                                required 
+                                class="flex h-12 w-full rounded-xl border-2 border-black/20 bg-white/60 backdrop-blur-xl px-4 pl-12 py-3 text-sm font-semibold text-black placeholder:text-black/50 focus-visible:outline-none focus-visible:border-[#22c55e] focus-visible:ring-2 focus-visible:ring-[#22c55e]/30 focus-visible:bg-white/70 focus-visible:backdrop-blur-xl transition-all duration-300 shadow-sm hover:border-black/30 hover:bg-white/65"
+                                placeholder="Ex: Projet Marketing"
+                            >
+                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="block text-sm font-semibold text-black/90 mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                            </svg>
+                            Couleur du tableau
+                        </label>
+                        <div class="grid grid-cols-6 gap-3 p-4 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/50">
+                            <button type="button" class="color-option group w-full aspect-square rounded-xl bg-blue-500 hover:scale-110 hover:shadow-xl transition-all duration-300 ring-2 ring-blue-500 ring-offset-2 ring-offset-white/20 selected" data-color="blue">
+                                <div class="w-full h-full rounded-xl flex items-center justify-center opacity-100 transition-opacity">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button type="button" class="color-option group w-full aspect-square rounded-xl bg-purple-500 hover:scale-110 hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-purple-500 ring-offset-2 ring-offset-white/20" data-color="purple">
+                                <div class="w-full h-full rounded-xl flex items-center justify-center opacity-0 transition-opacity">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button type="button" class="color-option group w-full aspect-square rounded-xl bg-green-500 hover:scale-110 hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-green-500 ring-offset-2 ring-offset-white/20" data-color="green">
+                                <div class="w-full h-full rounded-xl flex items-center justify-center opacity-0 transition-opacity">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button type="button" class="color-option group w-full aspect-square rounded-xl bg-yellow-500 hover:scale-110 hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-yellow-500 ring-offset-2 ring-offset-white/20" data-color="yellow">
+                                <div class="w-full h-full rounded-xl flex items-center justify-center opacity-0 transition-opacity">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button type="button" class="color-option group w-full aspect-square rounded-xl bg-red-500 hover:scale-110 hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-red-500 ring-offset-2 ring-offset-white/20" data-color="red">
+                                <div class="w-full h-full rounded-xl flex items-center justify-center opacity-0 transition-opacity">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <button type="button" class="color-option group w-full aspect-square rounded-xl bg-pink-500 hover:scale-110 hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-pink-500 ring-offset-2 ring-offset-white/20" data-color="pink">
+                                <div class="w-full h-full rounded-xl flex items-center justify-center opacity-0 transition-opacity">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4 pt-4">
+                        <button 
+                            type="submit" 
+                            class="group relative inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#22c55e] to-[#059669] text-white h-12 px-6 flex-1 font-semibold hover:from-[#059669] hover:to-[#22c55e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] transform"
+                        >
+                            <span class="relative z-10">Créer le tableau</span>
+                            <svg class="absolute right-6 w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </button>
+                        <button 
+                            type="button" 
+                            onclick="hideCreateBoardModal()" 
+                            class="inline-flex items-center justify-center rounded-xl border-2 border-black/20 bg-white/60 backdrop-blur-xl h-12 px-6 flex-1 font-semibold text-black/80 hover:bg-white/70 hover:border-black/30 hover:text-black transition-all duration-300"
+                        >
+                            Annuler
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -432,5 +495,75 @@
     </footer>
 
     <script src="dashboard.js"></script>
+    <script>
+        // Color selection with check mark
+        document.addEventListener('DOMContentLoaded', function() {
+            let selectedColor = 'blue'; // Default color
+            
+            const colorOptions = document.querySelectorAll('.color-option');
+            
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const color = this.getAttribute('data-color');
+                    selectedColor = color;
+                    
+                    // Remove selected class and ring from all options
+                    colorOptions.forEach(opt => {
+                        opt.classList.remove('selected');
+                        const checkDiv = opt.querySelector('div');
+                        if (checkDiv) {
+                            checkDiv.classList.remove('opacity-100');
+                            checkDiv.classList.add('opacity-0');
+                        }
+                        
+                        // Remove ring classes
+                        const colorName = opt.getAttribute('data-color');
+                        opt.classList.remove(`ring-${colorName}-500`);
+                        opt.classList.add('ring-transparent');
+                    });
+                    
+                    // Add selected class and ring to clicked option
+                    this.classList.add('selected');
+                    const checkDiv = this.querySelector('div');
+                    if (checkDiv) {
+                        checkDiv.classList.remove('opacity-0');
+                        checkDiv.classList.add('opacity-100');
+                    }
+                    
+                    // Add ring based on color
+                    const colorClasses = {
+                        'blue': 'ring-blue-500',
+                        'purple': 'ring-purple-500',
+                        'green': 'ring-green-500',
+                        'yellow': 'ring-yellow-500',
+                        'red': 'ring-red-500',
+                        'pink': 'ring-pink-500'
+                    };
+                    
+                    this.classList.remove('ring-transparent');
+                    if (colorClasses[color]) {
+                        this.classList.add(colorClasses[color]);
+                    }
+                });
+            });
+            
+            // Store selected color when form is submitted
+            const createBoardForm = document.getElementById('createBoardForm');
+            if (createBoardForm) {
+                createBoardForm.addEventListener('submit', function(e) {
+                    // Add hidden input with selected color
+                    let colorInput = document.getElementById('selectedBoardColor');
+                    if (!colorInput) {
+                        colorInput = document.createElement('input');
+                        colorInput.type = 'hidden';
+                        colorInput.id = 'selectedBoardColor';
+                        colorInput.name = 'color';
+                        this.appendChild(colorInput);
+                    }
+                    colorInput.value = selectedColor;
+                });
+            }
+        });
+    </script>
 </body>
 </html>
