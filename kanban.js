@@ -36,33 +36,56 @@ function loadBoard() {
     window.location.href = "dashboard.html";
     return;
   }
-  
+
   // Check if user has access to this board
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  if (currentBoard.userId !== currentUser.id) {
-    // Check if user is authorized
-    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+
+  if (!currentUser) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  // User always has access to their own boards
+  if (currentBoard.userId === currentUser.id) {
+    // User owns this board, allow access
+  } else {
+    // Check if user is authorized to access this board
+    const authorizedEmails = JSON.parse(
+      localStorage.getItem("authorizedEmails") || "{}"
+    );
     const authorizedList = authorizedEmails[currentBoard.userId] || [];
-    
+
     // Handle both old format (array of strings) and new format (array of objects)
-    const hasAccess = authorizedList.some(member => {
-      const memberEmail = typeof member === 'string' ? member : member.email;
+    const hasAccess = authorizedList.some((member) => {
+      const memberEmail = typeof member === "string" ? member : member.email;
       return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
     });
-    
+
     if (!hasAccess) {
       // User not authorized, redirect to own dashboard
-      alert('Vous n\'avez pas accès à ce tableau');
-      window.location.href = 'dashboard.html';
+      alert("Vous n'avez pas accès à ce tableau");
+      window.location.href = "dashboard.html";
       return;
     }
   }
 
-  // Update UI
-  document.getElementById("boardTitle").textContent = currentBoard.name;
+  // Update UI immediately
+  const boardTitleEl = document.getElementById("boardTitle");
+  if (boardTitleEl) {
+    boardTitleEl.textContent = currentBoard.name;
+    console.log("Board title updated to:", currentBoard.name);
+  } else {
+    console.error("boardTitle element not found, retrying...");
+    setTimeout(() => {
+      const retryEl = document.getElementById("boardTitle");
+      if (retryEl) {
+        retryEl.textContent = currentBoard.name;
+        console.log("Board title updated on retry");
+      }
+    }, 200);
+  }
 
   // Update user info
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (currentUser && currentUser.name) {
     const userNameEl = document.getElementById("userName");
     const userInitialEl = document.getElementById("userInitial");
@@ -76,17 +99,34 @@ function loadBoard() {
         .toUpperCase();
   }
 
-  // Load columns
-  loadColumns();
+  // Load columns - ensure DOM is ready
+  setTimeout(() => {
+    console.log("Loading columns for board:", currentBoardId);
+    loadColumns();
+  }, 150);
 }
 
 function loadColumns() {
+  if (!currentBoardId) {
+    console.error("No board ID available");
+    return;
+  }
+
   const columns = JSON.parse(localStorage.getItem("columns") || "[]");
   const boardColumns = columns
     .filter((c) => c.boardId === currentBoardId)
     .sort((a, b) => a.order - b.order);
 
   const container = document.getElementById("kanbanContainer");
+  if (!container) {
+    console.error("Kanban container not found");
+    // Retry after a short delay if container not found
+    setTimeout(() => {
+      loadColumns();
+    }, 100);
+    return;
+  }
+
   container.innerHTML = "";
 
   if (boardColumns.length === 0) {
@@ -95,13 +135,30 @@ function loadColumns() {
     return;
   }
 
-  boardColumns.forEach((column) => {
+  console.log(
+    `Found ${boardColumns.length} columns for board ${currentBoardId}`
+  );
+
+  boardColumns.forEach((column, index) => {
+    console.log(`Creating column ${index + 1}:`, column.name);
     const columnElement = createColumnElement(column);
-    container.appendChild(columnElement);
+    if (columnElement) {
+      container.appendChild(columnElement);
+      console.log(`Column "${column.name}" added successfully`);
+    } else {
+      console.error(`Failed to create column element for:`, column);
+    }
   });
+
+  console.log(`Total columns displayed: ${container.children.length}`);
 }
 
 function createDefaultColumns() {
+  if (!currentBoardId) {
+    console.error("No board ID available for creating default columns");
+    return;
+  }
+
   const defaultColumns = [
     { name: "Backlog", order: 0 },
     { name: "To Do", order: 1 },
@@ -110,10 +167,11 @@ function createDefaultColumns() {
   ];
 
   const columns = JSON.parse(localStorage.getItem("columns") || "[]");
+  const baseTime = Date.now();
 
   defaultColumns.forEach((col, index) => {
     const newColumn = {
-      id: Date.now().toString() + index,
+      id: (baseTime + index).toString(),
       boardId: currentBoardId,
       name: col.name,
       order: col.order,
@@ -122,10 +180,19 @@ function createDefaultColumns() {
   });
 
   localStorage.setItem("columns", JSON.stringify(columns));
-  loadColumns();
+
+  // Reload columns to display them immediately
+  setTimeout(() => {
+    loadColumns();
+  }, 50);
 }
 
 function createColumnElement(column) {
+  if (!column || !column.id) {
+    console.error("Invalid column data:", column);
+    return null;
+  }
+
   const columnDiv = document.createElement("div");
   columnDiv.className =
     "kanban-column bg-muted/30 border border-border rounded-lg p-4 min-w-[320px] max-w-[320px] flex flex-col h-full";
@@ -173,7 +240,11 @@ function createColumnElement(column) {
 
   // Setup drag and drop
   const cardsContainer = columnDiv.querySelector(".cards-container");
-  setupDragAndDrop(cardsContainer, columnDiv);
+  if (cardsContainer) {
+    setupDragAndDrop(cardsContainer, columnDiv);
+  } else {
+    console.error("Cards container not found in column element");
+  }
 
   return columnDiv;
 }
