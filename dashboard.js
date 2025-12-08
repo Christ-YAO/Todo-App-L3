@@ -48,8 +48,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Hide access management section if viewing shared dashboard
-    if (window.sharedDashboardOwnerId) {
+    // Hide access management section if viewing shared dashboard or if user is an authorized member
+    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+    const isAuthorizedMember = Object.keys(authorizedEmails).some(ownerId => {
+        const authorizedList = authorizedEmails[ownerId] || [];
+        return authorizedList.some(member => {
+            const memberEmail = typeof member === 'string' ? member : member.email;
+            return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
+        });
+    });
+    
+    if (window.sharedDashboardOwnerId || isAuthorizedMember) {
         const accessSection = document.getElementById('accessManagementSection');
         if (accessSection) {
             accessSection.style.display = 'none';
@@ -60,8 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
     loadStats();
     loadBoards();
     
-    // Load authorized emails
-    loadAuthorizedEmails();
+    // Load authorized emails only if user is not an authorized member
+    if (!isAuthorizedMember) {
+        loadAuthorizedEmails();
+    }
     
     // Handle add member form
     const addEmailForm = document.getElementById('addEmailForm');
