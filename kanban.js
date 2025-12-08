@@ -777,6 +777,9 @@ function showCardDetail(cardId) {
 
   if (!card) return;
 
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const isCreator = card.createdBy === currentUser.id;
+
   const priorityColors = {
     high: "bg-red-500",
     medium: "bg-yellow-500",
@@ -847,6 +850,9 @@ function showCardDetail(cardId) {
             </div>
         </div>
         <div class="flex space-x-4 pt-4 border-t border-border">
+            ${
+              isCreator
+                ? `
             <button onclick="showEditCardModal('${
               card.id
             }')" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground h-10 px-4 py-2 font-medium hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-colors">
@@ -857,6 +863,9 @@ function showCardDetail(cardId) {
             }')" class="inline-flex items-center justify-center rounded-md bg-red-600 text-white h-10 px-4 py-2 font-medium hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-colors">
                 Supprimer
             </button>
+            `
+                : ""
+            }
             <button onclick="hideCardDetailModal()" class="inline-flex items-center justify-center rounded-md border border-input bg-background h-10 px-4 py-2 font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transition-colors">
                 Fermer
             </button>
@@ -873,9 +882,21 @@ function hideCardDetailModal() {
 }
 
 function deleteCard(cardId) {
+  const cards = JSON.parse(localStorage.getItem("cards") || "[]");
+  const card = cards.find((c) => c.id === cardId);
+  
+  if (!card) return;
+  
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  
+  // Check if current user is the creator
+  if (card.createdBy !== currentUser.id) {
+    alert("Vous n'êtes pas autorisé à supprimer cette carte. Seul le créateur peut la supprimer.");
+    return;
+  }
+  
   if (!confirm("Êtes-vous sûr de vouloir supprimer cette carte ?")) return;
 
-  const cards = JSON.parse(localStorage.getItem("cards") || "[]");
   const filteredCards = cards.filter((c) => c.id !== cardId);
   localStorage.setItem("cards", JSON.stringify(filteredCards));
 
@@ -889,6 +910,14 @@ function showEditCardModal(cardId) {
   const card = cards.find((c) => c.id === cardId);
 
   if (!card) return;
+
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  
+  // Check if current user is the creator
+  if (card.createdBy !== currentUser.id) {
+    alert("Vous n'êtes pas autorisé à modifier cette carte. Seul le créateur peut la modifier.");
+    return;
+  }
 
   // Store current card ID for editing
   document.getElementById("editCardForm").dataset.cardId = cardId;

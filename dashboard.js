@@ -323,6 +323,8 @@ function displayBoards(userBoards) {
 
 function createBoardCard(board) {
     const card = document.createElement('div');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const isCreator = board.userId === currentUser.id;
     
     if (currentView === 'grid') {
         card.className = 'group relative bg-background border-2 border-border rounded-2xl overflow-hidden hover:border-primary hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1';
@@ -367,6 +369,9 @@ function createBoardCard(board) {
                     <div class="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
                         <span class="text-white text-sm font-semibold">${cardCount}</span>
                     </div>
+                    ${
+                      isCreator
+                        ? `
                     <div class="board-menu relative">
                         <button onclick="event.stopPropagation(); showBoardMenu('${board.id}', event)" class="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -374,6 +379,9 @@ function createBoardCard(board) {
                             </svg>
                         </button>
                     </div>
+                    `
+                        : ''
+                    }
                 </div>
             </div>
             <div class="p-6">
@@ -402,6 +410,9 @@ function createBoardCard(board) {
                 </div>
             </div>
             <div class="flex-shrink-0 flex items-center space-x-2">
+                ${
+                  isCreator
+                    ? `
                 <div class="board-menu relative">
                     <button onclick="event.stopPropagation(); showBoardMenu('${board.id}', event)" class="w-8 h-8 rounded-md flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -409,6 +420,9 @@ function createBoardCard(board) {
                         </svg>
                     </button>
                 </div>
+                `
+                    : ''
+                }
                 <svg class="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
@@ -479,10 +493,18 @@ function showBoardMenu(boardId, event) {
         currentBoardMenu = null;
     }
 
+    const boards = JSON.parse(localStorage.getItem('boards') || '[]');
+    const board = boards.find(b => b.id === boardId);
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const isCreator = board && board.userId === currentUser.id;
+
     const menu = document.createElement('div');
     menu.className = 'absolute right-0 top-full mt-2 w-48 bg-background border border-border rounded-lg shadow-lg z-50 py-1';
     menu.onclick = (e) => e.stopPropagation(); // Prevent card click when clicking menu
     menu.innerHTML = `
+        ${
+          isCreator
+            ? `
         <button onclick="event.stopPropagation(); editBoard('${boardId}'); return false;" class="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors flex items-center space-x-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -495,6 +517,9 @@ function showBoardMenu(boardId, event) {
             </svg>
             <span>Supprimer</span>
         </button>
+        `
+            : ''
+        }
     `;
 
     const button = event.target.closest('button');
@@ -519,6 +544,14 @@ function editBoard(boardId) {
     
     if (!board) {
         console.error('Board not found:', boardId);
+        return;
+    }
+
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    // Check if current user is the creator
+    if (board.userId !== currentUser.id) {
+        alert("Vous n'êtes pas autorisé à modifier ce tableau. Seul le créateur peut le modifier.");
         return;
     }
 
@@ -554,12 +587,27 @@ function editBoard(boardId) {
 }
 
 function deleteBoard(boardId) {
+    const boards = JSON.parse(localStorage.getItem('boards') || '[]');
+    const board = boards.find(b => b.id === boardId);
+    
+    if (!board) {
+        console.error('Board not found:', boardId);
+        return;
+    }
+
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    // Check if current user is the creator
+    if (board.userId !== currentUser.id) {
+        alert("Vous n'êtes pas autorisé à supprimer ce tableau. Seul le créateur peut le supprimer.");
+        return;
+    }
+
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce tableau ? Cette action supprimera également toutes les colonnes et cartes associées.')) {
         return;
     }
 
     // Delete board
-    const boards = JSON.parse(localStorage.getItem('boards') || '[]');
     const filteredBoards = boards.filter(b => b.id !== boardId);
     localStorage.setItem('boards', JSON.stringify(filteredBoards));
 
