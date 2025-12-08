@@ -69,6 +69,21 @@ function loadBoard() {
     }
   }
 
+  // Initialize createdBy for cards without it (legacy cards)
+  const cards = JSON.parse(localStorage.getItem("cards") || "[]");
+  let cardsUpdated = false;
+  const updatedCards = cards.map(card => {
+    if (!card.createdBy && card.boardId === currentBoardId) {
+      cardsUpdated = true;
+      return { ...card, createdBy: currentBoard.userId };
+    }
+    return card;
+  });
+  if (cardsUpdated) {
+    localStorage.setItem("cards", JSON.stringify(updatedCards));
+    console.log("Initialized createdBy for legacy cards");
+  }
+
   // Update UI immediately
   const boardTitleEl = document.getElementById("boardTitle");
   if (boardTitleEl) {
@@ -386,8 +401,62 @@ function formatDueDate(dateString) {
 
 function getCardsForColumn(columnId) {
   const cards = JSON.parse(localStorage.getItem("cards") || "[]");
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const boards = JSON.parse(localStorage.getItem("boards") || "[]");
+  const board = boards.find((b) => b.id === currentBoardId);
+  
+  if (!board || !currentUser) {
+    return cards
+      .filter((c) => c.columnId === columnId)
+      .sort((a, b) => a.order - b.order);
+  }
+  
+  // If user is the board owner, show all cards
+  if (board.userId === currentUser.id) {
+    return cards
+      .filter((c) => c.columnId === columnId)
+      .sort((a, b) => a.order - b.order);
+  }
+  
+  // If user is an authorized member, filter cards by who added them
+  const authorizedEmails = JSON.parse(localStorage.getItem("authorizedEmails") || "{}");
+  
+  // Check if user is authorized to access this board
+  const authorizedMembers = authorizedEmails[board.userId] || [];
+  const isAuthorized = authorizedMembers.some(member => {
+    const memberEmail = typeof member === "string" ? member : member.email;
+    return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
+  });
+  
+  if (!isAuthorized) {
+    // User is not authorized, return empty array
+    return [];
+  }
+  
+  // Find who added the current user
+  let addedByUserId = null;
+  for (const member of authorizedMembers) {
+    const memberEmail = typeof member === "string" ? member : member.email;
+    if (memberEmail.toLowerCase() === currentUser.email.toLowerCase()) {
+      addedByUserId = typeof member === "object" ? member.addedBy : null;
+      break;
+    }
+  }
+  
+  // If addedBy is not set (legacy member or added by owner), show cards created by board owner
+  // If addedBy is set, show cards created by that person OR by the current member
+  const targetCreatorId = addedByUserId || board.userId;
+  
+  // Filter cards created by the target creator OR by the current member
   return cards
-    .filter((c) => c.columnId === columnId)
+    .filter((c) => {
+      if (c.columnId !== columnId) return false;
+      // If card doesn't have createdBy (legacy), assume it was created by board owner
+      const cardCreator = c.createdBy || board.userId;
+      // Show cards created by the target creator (person who added member or board owner)
+      // OR cards created by the current member themselves
+      return cardCreator === targetCreatorId || c.createdBy === currentUser.id;
+    })
     .sort((a, b) => a.order - b.order);
 }
 
@@ -654,6 +723,7 @@ function createCard(
     comments: 0,
     assignees: assigneeName ? [assigneeName] : [],
     assigneeEmail: assigneeEmail || null,
+    createdBy: currentUser.id, // Track who created the card
     order: maxOrder + 1,
     createdAt: new Date().toISOString(),
   };
@@ -840,6 +910,7 @@ function updateCard(cardId, title, description, priority, dueDate, assigneeEmail
   if (!card) return;
 
   const users = JSON.parse(localStorage.getItem("users") || "[]");
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   
   // Get assignee name
   let assigneeName = "";
@@ -857,6 +928,11 @@ function updateCard(cardId, title, description, priority, dueDate, assigneeEmail
   card.dueDate = dueDate || null;
   card.assignees = assigneeName ? [assigneeName] : [];
   card.assigneeEmail = assigneeEmail || null;
+  
+  // Preserve createdBy if it exists, otherwise set it to current user
+  if (!card.createdBy && currentUser) {
+    card.createdBy = currentUser.id;
+  }
 
   localStorage.setItem("cards", JSON.stringify(cards));
   hideEditCardModal();

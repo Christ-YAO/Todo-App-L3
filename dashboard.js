@@ -48,17 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Hide access management section if viewing shared dashboard or if user is an authorized member
-    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
-    const isAuthorizedMember = Object.keys(authorizedEmails).some(ownerId => {
-        const authorizedList = authorizedEmails[ownerId] || [];
-        return authorizedList.some(member => {
-            const memberEmail = typeof member === 'string' ? member : member.email;
-            return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
-        });
-    });
-    
-    if (window.sharedDashboardOwnerId || isAuthorizedMember) {
+    // Hide access management section only if viewing shared dashboard
+    // Members can now add other members
+    if (window.sharedDashboardOwnerId) {
         const accessSection = document.getElementById('accessManagementSection');
         if (accessSection) {
             accessSection.style.display = 'none';
@@ -69,10 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
     loadStats();
     loadBoards();
     
-    // Load authorized emails only if user is not an authorized member
-    if (!isAuthorizedMember) {
-        loadAuthorizedEmails();
-    }
+    // Load authorized emails for all users (members can add other members)
+    loadAuthorizedEmails();
     
     // Handle add member form
     const addEmailForm = document.getElementById('addEmailForm');
@@ -636,12 +626,19 @@ function loadAuthorizedEmails() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser) return;
     
-    // Get authorized members for current user
+    // Get authorized members added by current user
+    // Members can add other members, so we show members they added
     const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
     const userMembers = authorizedEmails[currentUser.id] || [];
     
+    // Filter to show only members added by current user
+    const membersAddedByCurrentUser = userMembers.filter(member => {
+        if (typeof member === 'string') return false; // Legacy format, skip
+        return member.addedBy === currentUser.id;
+    });
+    
     // Handle migration from old format (array of strings) to new format (array of objects)
-    const members = userMembers.map(member => {
+    const members = membersAddedByCurrentUser.map(member => {
         if (typeof member === 'string') {
             return { name: member.split('@')[0], email: member };
         }
@@ -745,21 +742,57 @@ function addAuthorizedEmail(email, name) {
     }
     
     const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
-    if (!authorizedEmails[currentUser.id]) {
-        authorizedEmails[currentUser.id] = [];
+    const boards = JSON.parse(localStorage.getItem('boards') || '[]');
+    
+    // Determine which user's authorized list to add to
+    // If current user is viewing a shared dashboard, add to that owner's list
+    // Otherwise, if current user is an owner, add to their own list
+    // If current user is a member, find which board owner they're working with
+    let targetUserId = currentUser.id;
+    
+    // Check if viewing a shared dashboard
+    if (window.sharedDashboardOwnerId) {
+        targetUserId = window.sharedDashboardOwnerId;
+    } else {
+        // Check if current user is an owner
+        const isOwner = boards.some(b => b.userId === currentUser.id);
+        
+        if (!isOwner) {
+            // User is a member, find which board owner they have access to
+            // Get the first board owner who has authorized this user
+            for (const ownerId in authorizedEmails) {
+                const authorizedList = authorizedEmails[ownerId] || [];
+                const isAuthorized = authorizedList.some(member => {
+                    const memberEmail = typeof member === 'string' ? member : member.email;
+                    return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
+                });
+                if (isAuthorized) {
+                    targetUserId = ownerId;
+                    break;
+                }
+            }
+        }
+    }
+    
+    if (!authorizedEmails[targetUserId]) {
+        authorizedEmails[targetUserId] = [];
     }
     
     // Check if email already exists
-    const existingMember = authorizedEmails[currentUser.id].find(m => m.email.toLowerCase() === email.toLowerCase());
+    const existingMember = authorizedEmails[targetUserId].find(m => {
+        const memberEmail = typeof m === 'string' ? m : m.email;
+        return memberEmail.toLowerCase() === email.toLowerCase();
+    });
     if (existingMember) {
         alert('Cet email est déjà autorisé');
         return;
     }
     
-    // Add member with name and email
-    authorizedEmails[currentUser.id].push({
+    // Add member with name, email, and who added them
+    authorizedEmails[targetUserId].push({
         name: name.trim(),
-        email: email.toLowerCase()
+        email: email.toLowerCase(),
+        addedBy: currentUser.id
     });
     localStorage.setItem('authorizedEmails', JSON.stringify(authorizedEmails));
     
