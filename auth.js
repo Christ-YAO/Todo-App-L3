@@ -42,6 +42,24 @@ document.addEventListener('DOMContentLoaded', function() {
             if (user) {
                 // Save current user
                 localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                // Check if user has access to another user's dashboard
+                // If accessing someone else's dashboard, check authorization
+                const urlParams = new URLSearchParams(window.location.search);
+                const ownerId = urlParams.get('ownerId');
+                
+                if (ownerId && ownerId !== user.id) {
+                    // Check if user is authorized
+                    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+                    const authorizedList = authorizedEmails[ownerId] || [];
+                    
+                    if (!authorizedList.includes(user.email.toLowerCase())) {
+                        // User not authorized, redirect to own dashboard
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                }
+                
                 window.location.href = 'dashboard.html';
             } else {
                 alert('Email ou mot de passe incorrect');

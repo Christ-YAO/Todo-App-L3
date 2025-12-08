@@ -9,20 +9,72 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = 'login.html';
         return;
     }
+    
+    // Check if accessing someone else's dashboard
+    const urlParams = new URLSearchParams(window.location.search);
+    const ownerId = urlParams.get('ownerId');
+    
+    if (ownerId && ownerId !== currentUser.id) {
+        // Check if user has access
+        if (!checkUserAccess(ownerId)) {
+            // User not authorized, redirect to own dashboard
+            window.location.href = 'dashboard.html';
+            return;
+        }
+        // User is authorized, show shared dashboard
+        window.sharedDashboardOwnerId = ownerId;
+    }
 
     // Display user info
     if (currentUser && currentUser.name) {
         const userNameEl = document.getElementById('userName');
         const userInitialEl = document.getElementById('userInitial');
         const userGreetingEl = document.getElementById('userGreeting');
-        if (userNameEl) userNameEl.textContent = currentUser.name;
-        if (userInitialEl) userInitialEl.textContent = currentUser.name.charAt(0).toUpperCase();
-        if (userGreetingEl) userGreetingEl.textContent = `, ${currentUser.name.split(' ')[0]} !`;
+        
+        // If viewing shared dashboard, show owner's name
+        const targetUserId = window.sharedDashboardOwnerId || currentUser.id;
+        if (targetUserId !== currentUser.id) {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const owner = users.find(u => u.id === targetUserId);
+            if (owner) {
+                if (userNameEl) userNameEl.textContent = owner.name;
+                if (userInitialEl) userInitialEl.textContent = owner.name.charAt(0).toUpperCase();
+                if (userGreetingEl) userGreetingEl.textContent = `, ${owner.name.split(' ')[0]} !`;
+            }
+        } else {
+            if (userNameEl) userNameEl.textContent = currentUser.name;
+            if (userInitialEl) userInitialEl.textContent = currentUser.name.charAt(0).toUpperCase();
+            if (userGreetingEl) userGreetingEl.textContent = `, ${currentUser.name.split(' ')[0]} !`;
+        }
+    }
+    
+    // Hide access management section if viewing shared dashboard
+    if (window.sharedDashboardOwnerId) {
+        const accessSection = document.getElementById('accessManagementSection');
+        if (accessSection) {
+            accessSection.style.display = 'none';
+        }
     }
 
     // Load stats and boards
     loadStats();
     loadBoards();
+    
+    // Load authorized emails
+    loadAuthorizedEmails();
+    
+    // Handle add member form
+    const addEmailForm = document.getElementById('addEmailForm');
+    if (addEmailForm) {
+        addEmailForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('memberName').value.trim();
+            const email = document.getElementById('newEmail').value.trim();
+            if (name && email) {
+                addAuthorizedEmail(email, name);
+            }
+        });
+    }
 
     // Setup color selection for create form
     document.querySelectorAll('.color-option').forEach(btn => {
@@ -84,8 +136,38 @@ function loadStats() {
     const cards = JSON.parse(localStorage.getItem('cards') || '[]');
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     
-    const userBoards = boards.filter(b => b.userId === currentUser.id);
+    // If viewing a specific shared dashboard
+    if (window.sharedDashboardOwnerId) {
+        const userBoards = boards.filter(b => b.userId === window.sharedDashboardOwnerId);
+        const userCards = cards.filter(c => userBoards.some(b => b.id === c.boardId));
+        displayStats(userBoards, userCards);
+        return;
+    }
+    
+    // Get all user IDs whose boards this user can access
+    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+    const accessibleUserIds = [currentUser.id]; // Start with own boards
+    
+    // Find all owners who have authorized this user
+    Object.keys(authorizedEmails).forEach(ownerId => {
+        const authorizedList = authorizedEmails[ownerId] || [];
+        const isAuthorized = authorizedList.some(member => {
+            const memberEmail = typeof member === 'string' ? member : member.email;
+            return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
+        });
+        if (isAuthorized) {
+            accessibleUserIds.push(ownerId);
+        }
+    });
+    
+    // Filter boards and cards for all accessible users
+    const userBoards = boards.filter(b => accessibleUserIds.includes(b.userId));
     const userCards = cards.filter(c => userBoards.some(b => b.id === c.boardId));
+    
+    displayStats(userBoards, userCards);
+}
+
+function displayStats(userBoards, userCards) {
     
     const statsSection = document.getElementById('statsSection');
     if (!statsSection) return;
@@ -141,11 +223,40 @@ function loadBoards() {
     const boards = JSON.parse(localStorage.getItem('boards') || '[]');
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     
-    // Filter boards for current user
-    const userBoards = boards.filter(b => b.userId === currentUser.id);
+    // If viewing a specific shared dashboard
+    if (window.sharedDashboardOwnerId) {
+        const userBoards = boards.filter(b => b.userId === window.sharedDashboardOwnerId);
+        displayBoards(userBoards);
+        return;
+    }
+    
+    // Get all user IDs whose boards this user can access
+    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+    const accessibleUserIds = [currentUser.id]; // Start with own boards
+    
+    // Find all owners who have authorized this user
+    Object.keys(authorizedEmails).forEach(ownerId => {
+        const authorizedList = authorizedEmails[ownerId] || [];
+        const isAuthorized = authorizedList.some(member => {
+            const memberEmail = typeof member === 'string' ? member : member.email;
+            return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
+        });
+        if (isAuthorized) {
+            accessibleUserIds.push(ownerId);
+        }
+    });
+    
+    // Filter boards for all accessible users
+    const userBoards = boards.filter(b => accessibleUserIds.includes(b.userId));
+    
+    displayBoards(userBoards);
+}
+
+function displayBoards(userBoards) {
     
     const container = document.getElementById('boardsContainer');
     const emptyState = document.getElementById('emptyState');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     if (userBoards.length === 0) {
         if (container) container.classList.add('hidden');
@@ -162,8 +273,36 @@ function loadBoards() {
         ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
         : 'space-y-4';
 
+    // Get users for displaying owner names
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+
     userBoards.forEach(board => {
         const boardCard = createBoardCard(board);
+        
+        // Add indicator if board is shared (not owned by current user)
+        if (board.userId !== currentUser.id) {
+            const owner = users.find(u => u.id === board.userId);
+            if (owner) {
+                const sharedBadge = document.createElement('div');
+                sharedBadge.className = 'absolute top-2 left-2 bg-blue-500/90 backdrop-blur-sm text-white text-xs font-semibold px-2 py-1 rounded-lg flex items-center gap-1 z-20 shadow-lg';
+                sharedBadge.innerHTML = `
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    ${owner.name}
+                `;
+                // Find the header section of the card (the colored gradient area)
+                const headerSection = boardCard.querySelector('.relative.h-48') || boardCard.querySelector('.relative');
+                if (headerSection) {
+                    headerSection.appendChild(sharedBadge);
+                } else {
+                    // Fallback: add to card itself
+                    boardCard.style.position = 'relative';
+                    boardCard.appendChild(sharedBadge);
+                }
+            }
+        }
+        
         container.appendChild(boardCard);
     });
     
@@ -479,5 +618,208 @@ function showEditBoardModal() {
 function hideEditBoardModal() {
     document.getElementById('editBoardModal').classList.add('hidden');
     document.getElementById('editBoardModal').classList.remove('flex');
+}
+
+// Access Management Functions
+function loadAuthorizedEmails() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    
+    // Get authorized members for current user
+    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+    const userMembers = authorizedEmails[currentUser.id] || [];
+    
+    // Handle migration from old format (array of strings) to new format (array of objects)
+    const members = userMembers.map(member => {
+        if (typeof member === 'string') {
+            return { name: member.split('@')[0], email: member };
+        }
+        return member;
+    });
+    
+    // Display in main section
+    const listContainer = document.getElementById('authorizedEmailsList');
+    if (listContainer) {
+        if (members.length === 0) {
+            listContainer.innerHTML = `
+                <div class="text-center py-4 text-black/50 text-sm">
+                    <p>Aucun membre autorisé pour le moment</p>
+                </div>
+            `;
+        } else {
+            listContainer.innerHTML = members.map(member => {
+                const email = typeof member === 'string' ? member : member.email;
+                const name = typeof member === 'string' ? email.split('@')[0] : member.name;
+                const displayName = name || email;
+                return `
+                <div class="flex items-center justify-between p-3 bg-white/40 backdrop-blur-sm rounded-xl border border-white/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#22c55e] to-[#059669] flex items-center justify-center text-white text-xs font-bold">
+                            ${displayName.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold text-black">${displayName}</span>
+                            <span class="text-xs text-black/60">${email}</span>
+                        </div>
+                    </div>
+                    <button onclick="removeAuthorizedEmail('${email}')" class="w-8 h-8 rounded-lg bg-red-500/20 hover:bg-red-500/30 flex items-center justify-center text-red-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            }).join('');
+        }
+    }
+    
+    // Display in modal
+    const modalListContainer = document.getElementById('authorizedEmailsModalList');
+    if (modalListContainer) {
+        if (members.length === 0) {
+            modalListContainer.innerHTML = `
+                <div class="text-center py-4 text-black/50 text-sm">
+                    <p>Aucun membre autorisé</p>
+                </div>
+            `;
+        } else {
+            modalListContainer.innerHTML = members.map(member => {
+                const email = typeof member === 'string' ? member : member.email;
+                const name = typeof member === 'string' ? email.split('@')[0] : member.name;
+                const displayName = name || email;
+                return `
+                <div class="flex items-center justify-between p-3 bg-white/40 backdrop-blur-sm rounded-xl border border-white/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#22c55e] to-[#059669] flex items-center justify-center text-white text-xs font-bold">
+                            ${displayName.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold text-black">${displayName}</span>
+                            <span class="text-xs text-black/60">${email}</span>
+                        </div>
+                    </div>
+                    <button onclick="removeAuthorizedEmail('${email}')" class="w-8 h-8 rounded-lg bg-red-500/20 hover:bg-red-500/30 flex items-center justify-center text-red-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            }).join('');
+        }
+    }
+}
+
+function addAuthorizedEmail(email, name) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Veuillez entrer une adresse email valide');
+        return;
+    }
+    
+    // Validate name
+    if (!name || name.trim() === '') {
+        alert('Veuillez entrer un nom complet');
+        return;
+    }
+    
+    // Don't allow adding own email
+    if (email.toLowerCase() === currentUser.email.toLowerCase()) {
+        alert('Vous ne pouvez pas vous ajouter vous-même');
+        return;
+    }
+    
+    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+    if (!authorizedEmails[currentUser.id]) {
+        authorizedEmails[currentUser.id] = [];
+    }
+    
+    // Check if email already exists
+    const existingMember = authorizedEmails[currentUser.id].find(m => m.email.toLowerCase() === email.toLowerCase());
+    if (existingMember) {
+        alert('Cet email est déjà autorisé');
+        return;
+    }
+    
+    // Add member with name and email
+    authorizedEmails[currentUser.id].push({
+        name: name.trim(),
+        email: email.toLowerCase()
+    });
+    localStorage.setItem('authorizedEmails', JSON.stringify(authorizedEmails));
+    
+    loadAuthorizedEmails();
+    
+    // Clear form
+    document.getElementById('memberName').value = '';
+    document.getElementById('newEmail').value = '';
+}
+
+function removeAuthorizedEmail(email) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    
+    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+    const members = authorizedEmails[currentUser.id] || [];
+    
+    // Find member to get name for confirmation
+    const member = members.find(m => {
+        const memberEmail = typeof m === 'string' ? m : m.email;
+        return memberEmail.toLowerCase() === email.toLowerCase();
+    });
+    
+    const memberName = member && typeof member === 'object' ? member.name : email.split('@')[0];
+    
+    if (!confirm(`Êtes-vous sûr de vouloir retirer l'accès à ${memberName} (${email}) ?`)) {
+        return;
+    }
+    
+    if (authorizedEmails[currentUser.id]) {
+        authorizedEmails[currentUser.id] = authorizedEmails[currentUser.id].filter(m => {
+            const memberEmail = typeof m === 'string' ? m : m.email;
+            return memberEmail.toLowerCase() !== email.toLowerCase();
+        });
+        localStorage.setItem('authorizedEmails', JSON.stringify(authorizedEmails));
+    }
+    
+    loadAuthorizedEmails();
+}
+
+function showAccessModal() {
+    const modal = document.getElementById('accessModal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    loadAuthorizedEmails();
+}
+
+function hideAccessModal() {
+    const modal = document.getElementById('accessModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+// Check if user has access to another user's dashboard
+function checkUserAccess(userId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return false;
+    
+    // User always has access to their own dashboard
+    if (currentUser.id === userId) return true;
+    
+    // Check if current user is authorized
+    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+    const authorizedList = authorizedEmails[userId] || [];
+    
+    // Handle both old format (array of strings) and new format (array of objects)
+    return authorizedList.some(member => {
+        const memberEmail = typeof member === 'string' ? member : member.email;
+        return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
+    });
 }
 

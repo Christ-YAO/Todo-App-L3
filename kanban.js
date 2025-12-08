@@ -36,6 +36,27 @@ function loadBoard() {
     window.location.href = "dashboard.html";
     return;
   }
+  
+  // Check if user has access to this board
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  if (currentBoard.userId !== currentUser.id) {
+    // Check if user is authorized
+    const authorizedEmails = JSON.parse(localStorage.getItem('authorizedEmails') || '{}');
+    const authorizedList = authorizedEmails[currentBoard.userId] || [];
+    
+    // Handle both old format (array of strings) and new format (array of objects)
+    const hasAccess = authorizedList.some(member => {
+      const memberEmail = typeof member === 'string' ? member : member.email;
+      return memberEmail.toLowerCase() === currentUser.email.toLowerCase();
+    });
+    
+    if (!hasAccess) {
+      // User not authorized, redirect to own dashboard
+      alert('Vous n\'avez pas accès à ce tableau');
+      window.location.href = 'dashboard.html';
+      return;
+    }
+  }
 
   // Update UI
   document.getElementById("boardTitle").textContent = currentBoard.name;
